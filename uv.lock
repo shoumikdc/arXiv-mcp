@@ -190,6 +190,7 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "arxiv" },
+    { name = "feedparser" },
     { name = "mcp" },
     { name = "smithery" },
 ]
@@ -197,6 +198,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "arxiv" },
+    { name = "feedparser" },
     { name = "mcp", specifier = ">=1.15.0" },
     { name = "smithery", specifier = ">=0.4.2" },
 ]

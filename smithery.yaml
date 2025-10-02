@@ -1,1 +1,8 @@
+name: arxiv-server
+version: 0.1.0
+description: MCP server that provides tools to search arXiv and say hello
 runtime: python
+
+mcp:
+  type: server
+  entrypoint: server.py
