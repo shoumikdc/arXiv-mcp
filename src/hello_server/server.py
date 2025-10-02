@@ -19,6 +19,7 @@ from smithery.decorators import smithery
 class ConfigSchema(BaseModel):
     # access_token: str = Field(..., description="Your access token for authentication")
     pirate_mode: bool = Field(False, description="Speak like a pirate")
+    num_papers: int = Field(5, description="Number of arXiv papers to return")
 
 
 # For servers with configuration:
@@ -54,9 +55,12 @@ def create_server():
     def search_arxiv(category: str, ctx: Context) -> list:
         """Search arXiv papers in a category from the most recent daily posting."""
         import arxiv
+        
+        num_papers = ctx.session_config.num_papers
+        
         search = arxiv.Search(
             query=f"cat:{category}",
-            max_results=5,
+            max_results=num_papers,
             sort_by=arxiv.SortCriterion.SubmittedDate,
             sort_order=arxiv.SortOrder.Descending,
         )
@@ -70,6 +74,72 @@ def create_server():
                 "published": str(result.published),
             })
         return results
+
+    # Tool: Find new arXiv papers in a category from the last day (via RSS), filtered by keyword
+    @server.tool()
+    def arxiv_rss_by_keyword(category: str, keyword: str, ctx: Context) -> list:
+        """Search the daily arXiv RSS feed for a category, filtering by keyword in title or summary."""
+        import feedparser
+
+
+        keyword_lower = keyword.lower()
+
+        url = f"https://rss.arxiv.org/rss/{category}"
+        feed = feedparser.parse(url)
+
+        results = []
+        for e in feed.entries:
+
+            announce_type = getattr(e, "arxiv_announce_type", None)
+            if "replace" in announce_type.lower():
+                continue  # skip replaced articles but keeps cross-lists
+
+            text = (e.title + " " + e.summary).lower()
+            if keyword_lower in text:
+                results.append({
+                    "title": e.title,
+                    "authors": e.get("authors", []),   # RSS usually provides this
+                    "summary": e.summary,
+                    "url": e.link,
+                    "published": str(e.published) if hasattr(e, "published") else None,
+                })
+
+        return results
+
+
+
+    # @server.tool()
+    # def arxiv_new_papers_by_keyword(category: str, keyword: str, ctx: Context) -> list:
+    #     """Find new arXiv papers in a category from the last day, filtered by keyword in title or summary."""
+    #     import arxiv
+    #     from datetime import datetime, timedelta, timezone
+
+    #     num_papers = ctx.session_config.num_papers
+    #     now = datetime.now(timezone.utc)
+    #     yesterday = now - timedelta(days=1)
+
+    #     search = arxiv.Search(
+    #         query=f"cat:{category}",
+    #         max_results=10,
+    #         sort_by=arxiv.SortCriterion.SubmittedDate,
+    #         sort_order=arxiv.SortOrder.Descending,
+    #     )
+    #     keyword_lower = keyword.lower()
+    #     results = []
+    #     for result in search.results():
+    #         if result.published >= yesterday:
+    #             text = (result.title + " " + result.summary).lower()
+    #             if keyword_lower in text:
+    #                 results.append({
+    #                     "title": result.title,
+    #                     "authors": [a.name for a in result.authors],
+    #                     "summary": result.summary,
+    #                     "url": result.entry_id,
+    #                     "published": str(result.published),
+    #                 })
+    #         if len(results) >= num_papers:
+    #             break
+    #     return results
 
     # Add a resource
     @server.resource("history://hello-world")
