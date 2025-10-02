@@ -29,7 +29,7 @@ def create_server():
     """Create and configure the MCP server."""
 
     # Create your FastMCP server as usual
-    server = FastMCP("Say Hello")
+    server = FastMCP("Say Hello and search arXiv")
 
     # Add a tool
     @server.tool()
@@ -48,6 +48,28 @@ def create_server():
             return f"Ahoy, {name}!"
         else:
             return f"Hello, {name}!"
+
+    # Tool: Search arXiv papers by category
+    @server.tool()
+    def search_arxiv(category: str, ctx: Context) -> list:
+        """Search arXiv papers in a category from the most recent daily posting."""
+        import arxiv
+        search = arxiv.Search(
+            query=f"cat:{category}",
+            max_results=5,
+            sort_by=arxiv.SortCriterion.SubmittedDate,
+            sort_order=arxiv.SortOrder.Descending,
+        )
+        results = []
+        for result in search.results():
+            results.append({
+                "title": result.title,
+                "authors": [a.name for a in result.authors],
+                "summary": result.summary,
+                "url": result.entry_id,
+                "published": str(result.published),
+            })
+        return results
 
     # Add a resource
     @server.resource("history://hello-world")
