@@ -1,5 +1,7 @@
 # arXiv-mcp
 
+[![smithery badge](https://smithery.ai/badge/@shoumikdc/arxiv-mcp)](https://smithery.ai/server/@shoumikdc/arxiv-mcp)
+
 An MCP server built with [Smithery CLI](https://smithery.ai/docs/getting_started/quickstart_build_python)
 
 ## Prerequisites
@@ -7,6 +9,14 @@ An MCP server built with [Smithery CLI](https://smithery.ai/docs/getting_started
 - **Smithery API key**: Get yours at [smithery.ai/account/api-keys](https://smithery.ai/account/api-keys)
 
 ## Getting Started
+
+### Installing via Smithery
+
+To install arxiv-mcp automatically via [Smithery](https://smithery.ai/server/@shoumikdc/arxiv-mcp):
+
+```bash
+npx -y @smithery/cli install @shoumikdc/arxiv-mcp
+```
 
 1. Run the server:
    ```bash
