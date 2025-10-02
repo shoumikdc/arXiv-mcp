@@ -14,7 +14,6 @@ requires-python = ">=3.10"
 dependencies = [
     "mcp>=1.15.0",
     "smithery>=0.4.2",
-    "arxiv",
     "feedparser"
 ]
 
