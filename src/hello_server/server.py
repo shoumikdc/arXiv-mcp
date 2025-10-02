@@ -52,7 +52,7 @@ def create_server():
 
     # Tool: Find new arXiv papers in a category from the last day (via RSS)
     @server.tool()
-    def find_new_arxiv_rss(category: str, ctx: Context) -> list:
+    def fetch_current_arxiv_postings_rss(category: str, ctx: Context) -> list:
         """
         Returns all of today's brand-new arXiv submissions in a category via RSS.
         """
@@ -64,8 +64,8 @@ def create_server():
         results = []
         for e in feed.entries:
             announce_type = getattr(e, "arxiv_announce_type", None)
-            if announce_type != "new":
-                continue
+            if "replace" in announce_type.lower():
+                continue  # skip replaced articles but keeps new cross-lists
 
             results.append({
                 "title": e.title,
