@@ -1,5 +1,7 @@
 # arXiv-mcp
 
+[![smithery badge](https://smithery.ai/badge/@shoumikdc/arxiv-mcp)](https://smithery.ai/server/@shoumikdc/arxiv-mcp)
+
 An MCP server built with [Smithery CLI](https://smithery.ai/docs/getting_started/quickstart_build_python)
 
 ## Prerequisites
