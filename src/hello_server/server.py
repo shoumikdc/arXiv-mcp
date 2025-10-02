@@ -50,30 +50,57 @@ def create_server():
         else:
             return f"Hello, {name}!"
 
-    # Tool: Search arXiv papers by category
+    # Tool: Find new arXiv papers in a category from the last day (via RSS)
     @server.tool()
-    def search_arxiv(category: str, ctx: Context) -> list:
-        """Search arXiv papers in a category from the most recent daily posting."""
-        import arxiv
-        
-        num_papers = ctx.session_config.num_papers
-        
-        search = arxiv.Search(
-            query=f"cat:{category}",
-            max_results=num_papers,
-            sort_by=arxiv.SortCriterion.SubmittedDate,
-            sort_order=arxiv.SortOrder.Descending,
-        )
+    def arxiv_rss_new(category: str, ctx: Context) -> list:
+        """
+        Return today's brand-new arXiv submissions in a category (RSS).
+        """
+        import feedparser
+
+        url = f"https://rss.arxiv.org/rss/{category}"
+        feed = feedparser.parse(url)
+
         results = []
-        for result in search.results():
+        for e in feed.entries:
+            announce_type = getattr(e, "arxiv_announce_type", None)
+            if announce_type != "new":
+                continue
+
             results.append({
-                "title": result.title,
-                "authors": [a.name for a in result.authors],
-                "summary": result.summary,
-                "url": result.entry_id,
-                "published": str(result.published),
+                "title": e.title,
+                "authors": e.get("authors", []),
+                "summary": e.summary,
+                "url": e.link,
+                "published": str(e.published) if hasattr(e, "published") else None,
             })
+
         return results
+
+    # Tool: Search arXiv papers by category
+    # @server.tool()
+    # def search_arxiv(category: str, ctx: Context) -> list:
+    #     """Search arXiv papers in a category from the most recent daily posting."""
+    #     import arxiv
+        
+    #     num_papers = ctx.session_config.num_papers
+        
+    #     search = arxiv.Search(
+    #         query=f"cat:{category}",
+    #         max_results=num_papers,
+    #         sort_by=arxiv.SortCriterion.SubmittedDate,
+    #         sort_order=arxiv.SortOrder.Descending,
+    #     )
+    #     results = []
+    #     for result in search.results():
+    #         results.append({
+    #             "title": result.title,
+    #             "authors": [a.name for a in result.authors],
+    #             "summary": result.summary,
+    #             "url": result.entry_id,
+    #             "published": str(result.published),
+    #         })
+    #     return results
 
     # Tool: Find new arXiv papers in a category from the last day (via RSS), filtered by keyword
     @server.tool()
