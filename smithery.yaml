@@ -6,3 +6,7 @@ runtime: python
 mcp:
   type: server
   entrypoint: server.py
+
+repository:
+  type: github
+  url: https://github.com/shoumikdc/arxiv-mcp
