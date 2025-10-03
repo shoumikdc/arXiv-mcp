@@ -1,3 +1,3 @@
 """Hello Server - An MCP server built with Smithery."""
 
-__version__ = "0.1.0"
+__version__ = "1.15.1"

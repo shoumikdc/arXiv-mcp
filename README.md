@@ -18,7 +18,7 @@ Staying up-to-date with the latest research on arXiv is challenging due to the v
 ## Example Usage (LLM Chat)
 
 > **User:**  
-Find today's new quantum computing papers on arXiv.
+Find today's latest papers in the category `quant-ph`. Then curate a list of papers related to quantum computing. 
 > 
 > **LLM (using arXiv-mcp):**  
 > Calls `fetch_current_arxiv_postings_rss(category="quant-ph")`  
@@ -31,7 +31,7 @@ Find today's new quantum computing papers on arXiv.
 >
 > **LLM (using arXiv-mcp):**  
 > Calls `keyword_search_arxiv_rss(category="quant-ph", keyword="fluxonium qubits")`  
-Returns filtered results matching the keyword.
+Returns a list of filtered papers whose title or abstract matches the keyword.
 
 ---
 
