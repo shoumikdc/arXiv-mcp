@@ -47,7 +47,7 @@ Returns filtered results matching the keyword.
    uv run playground
    ```
 
-Your server code is in `src/arxiv_mcp/server.py`.  
+Your server code is in `src/hello_server/server.py`.  
 The server capabilities can be modified there.
 
 ---
