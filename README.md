@@ -1,42 +1,61 @@
+
 # arXiv-mcp
 
-An MCP server built with [Smithery CLI](https://smithery.ai/docs/getting_started/quickstart_build_python)
+**arXiv-mcp** is a Model Context Protocol (MCP) server for querying and discovering the latest arXiv papers, built for seamless integration with LLMs and AI agents via the Smithery platform.
 
-## Prerequisites
+## Overview
 
-- **Smithery API key**: Get yours at [smithery.ai/account/api-keys](https://smithery.ai/account/api-keys)
+This tool enables AI applications to fetch, filter, and summarize new arXiv submissions in any category, making it easy to build research assistants, literature review bots, or custom paper discovery workflows. Powered by Smithery MCP, it supports session-based configuration and is ready for deployment.
+
+## Problem Statement
+
+Staying up-to-date with the latest research on arXiv is challenging due to the volume and frequency of new submissions. arXiv-mcp solves this by providing a programmable interface for LLMs and agents to:
+- Retrieve daily arXiv postings by category
+- Search for papers by keyword
+- Return structured metadata (title, authors, summary, link, published date)
+- Personalize results with session config (in development currently!)
+
+## Example Usage (LLM Chat)
+
+> **User:**  
+Find today's new quantum computing papers on arXiv.
+> 
+> **LLM (using arXiv-mcp):**  
+> Calls `fetch_current_arxiv_postings_rss(category="quant-ph")`  
+> Returns a list of new papers with titles, authors, summaries, and links.
+
+<br>
+
+> **User:**  
+> Show me recent arXiv papers about "fluxonium qubits" in quantum computing.
+>
+> **LLM (using arXiv-mcp):**  
+> Calls `keyword_search_arxiv_rss(category="quant-ph", keyword="fluxonium qubits")`  
+Returns filtered results matching the keyword.
+
+---
 
 ## Getting Started
 
-1. Run the server:
+1. **Run the server:**
    ```bash
    uv run dev
    ```
 
-2. Test interactively:
-
+2. **Test interactively:**
    ```bash
    uv run playground
    ```
 
-Try saying "Say hello to John" to test the example tool.
+Your server code is in `src/arxiv_mcp/server.py`.  
+The server capabilities can be modified there.
 
-## Development
+---
 
-Your server code is in `src/hello_server/server.py`. Add or update your server capabilities there.
+## Prerequisites
 
-## Deploy
+- **Smithery API key:** Get yours at [smithery.ai/account/api-keys](https://smithery.ai/account/api-keys)
 
-Ready to deploy? Push your code to GitHub and deploy to Smithery:
+---
 
-1. Create a new repository at [github.com/new](https://github.com/new)
-
-2. Initialize git and push to GitHub:
-   ```bash
-   git add .
-   git commit -m "Hello world 👋"
-   git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
-   git push -u origin main
-   ```
-
-3. Deploy your server to Smithery at [smithery.ai/new](https://smithery.ai/new)
+This code can be deployed by pushing to GitHub and then deploying via [smithery.ai/new](https://smithery.ai/new)
